@@ -1,0 +1,32 @@
+e();
+	$library_initialised++;
+    }
+}
+
+###
+### Basic request - response primitive (don't use for https)
+###
+
+sub sslcat { # address, port, message, $crt, $key --> reply / (reply,errs,cert)
+    my ($dest_serv, $port, $out_message, $crt_path, $key_path) = @_;
+    my ($ctx, $ssl, $got, $errs, $written);
+
+    ($got, $errs) = open_proxy_tcp_connection($dest_serv, $port);
+    return (wantarray ? (undef, $errs) : undef) unless $got;
+
+    ### Do SSL negotiation stuff
+
+    warn "Creating SSL $ssl_version context...\n" if $trace>2;
+    initialize(); # Will init at most once
+
+    $ctx = new_x_ctx();
+    goto cleanup2 if $errs = print_errs('CTX_new') or !$ctx;
+
+    CTX_set_options($ctx, &OP_ALL);
+    goto cleanup2 if $errs = print_errs('CTX_set_options');
+
+    warn "Cert `$crt_path' given without key" if $crt_path && !$key_path;
+    set_cert_and_key($ctx, $crt_path, $key_path) if $crt_path;
+
+    warn "Creating SSL connection (context was '$ctx')...\n" if $trace>2;
+   

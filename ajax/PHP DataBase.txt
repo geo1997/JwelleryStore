@@ -1,0 +1,8 @@
+Mainsite_user:
+id - 01
+Fullname - Kacindra Ayeshmantha
+UserName - Funky
+Email - sanju.bandara10@gmail.com
+password - 543dujfgdfjkgheuhrfh4uwu
+URL - localhost:8080/password-recovery/
+password reset - 65364
